@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depression Prediction</title>
+    <style>
+        :root {
+            --primary-color: #6a9eda;
+            --secondary-color: #f5a623;
+            --background-color: #1a1a1a;
+            --form-background: #2a2a2a;
+            --text-color: #e0e0e0;
+            --input-background: #3a3a3a;
+            --input-text: #ffffff;
+            --button-hover: #5a8ac7;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--form-background);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        form {
+            display: grid;
+            gap: 20px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: var(--input-background);
+            color: var(--input-text);
+        }
+        input[type="submit"] {
+            background-color: var(--primary-color);
+            color: var(--input-text);
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: var(--button-hover);
+            box-shadow: 0 0 15px rgba(106, 158, 218, 0.7);
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .result.depression {
+            background-color: #8b0000;
+            color: white;
+        }
+        .result.no-depression {
+            background-color: #006400;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Depression Prediction Tool</h1>
+        <form method="POST">
+            <div>
+                <label for="Age">Age:</label>
+                <input type="number" id="Age" name="Age" required>
+            </div>
+
+            <div>
+                <label for="Job Satisfaction">Job Satisfaction (1-10):</label>
+                <input type="number" id="Job Satisfaction" name="Job Satisfaction" min="1" max="10" required>
+            </div>
+
+            <div>
+                <label for="Work/Study Hours">Work/Study Hours per week:</label>
+                <input type="number" id="Work/Study Hours" name="Work/Study Hours" required>
+            </div>
+
+            <div>
+                <label for="Financial Stress">Financial Stress (1-10):</label>
+                <input type="number" id="Financial Stress" name="Financial Stress" min="1" max="10" required>
+            </div>
+
+            <div>
+                <label for="Gender_Male">Gender:</label>
+                <select id="Gender_Male" name="Gender_Male">
+                    <option value="0">Female</option>
+                    <option value="1">Male</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="City_Tier 1">City Tier:</label>
+                <select id="City_Tier 1" name="City_Tier 1">
+                    <option value="0">Tier 2 or 3</option>
+                    <option value="1">Tier 1</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="Working Professional or Student_Working Professional">Occupation:</label>
+                <select id="Working Professional or Student_Working Professional" name="Working Professional or Student_Working Professional">
+                    <option value="0">Student</option>
+                    <option value="1">Working Professional</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="Sleep Duration">Sleep Duration (hours):</label>
+                <input type="number" id="Sleep Duration" name="Sleep Duration" min="0" max="24" step="0.5" required>
+            </div>
+
+            <div>
+                <label for="Dietary Habits_Unhealthy">Dietary Habits:</label>
+                <select id="Dietary Habits_Unhealthy" name="Dietary Habits_Unhealthy">
+                    <option value="0">Healthy</option>
+                    <option value="1">Unhealthy</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="Degree_Class 12">Education Level:</label>
+                <select id="Degree_Class 12" name="Degree_Class 12">
+                    <option value="0">Higher than Class 12</option>
+                    <option value="1">Class 12</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="Have you ever had suicidal thoughts ?_Yes">Have you ever had suicidal thoughts?</label>
+                <select id="Have you ever had suicidal thoughts ?_Yes" name="Have you ever had suicidal thoughts ?_Yes">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="Family History of Mental Illness_Yes">Family History of Mental Illness:</label>
+                <select id="Family History of Mental Illness_Yes" name="Family History of Mental Illness_Yes">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+
+            <input type="submit" value="Predict">
+        </form>
+
+        {% if result %}
+        <div class="result {% if result.prediction == 'Depression' %}depression{% else %}no-depression{% endif %}">
+            <h2>Prediction Result</h2>
+            <p><strong>Prediction:</strong> {{ result.prediction }}</p>
+            <p><strong>Probability:</strong> {{ result.probability }}</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
+
